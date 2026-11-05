@@ -1,0 +1,132 @@
+/* Custom Overrides for Bootstrap 5 SaaS Theme */
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+.bg-primary-subtle {
+  background-color: #eff6ff !important;
+}
+
+.text-primary {
+  color: var(--primary) !important;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+}
+
+.btn-secondary, .btn-outline-secondary {
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover, .btn-outline-secondary:hover {
+  transform: translateY(-1px);
+}
+
+.transition-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.transition-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.03) !important;
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e5e7eb;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  animation: fadeUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+.timeline-item:nth-child(1) { animation-delay: 0.1s; }
+.timeline-item:nth-child(2) { animation-delay: 0.2s; }
+.timeline-item:nth-child(3) { animation-delay: 0.3s; }
+
+.timeline-dot {
+  position: absolute;
+  left: -2rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-dot.active {
+  border-color: var(--primary);
+  background: #eff6ff;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(4px);
+}
+
+/* Override global font to Times New Roman */
+body, h1, h2, h3, h4, h5, h6, p, a, span, div, input, button, select, textarea, .nav-link, .badge, .btn {
+    font-family: 'Times New Roman', Times, serif !important;
+}
+
+/* Animations and Hover Effects */
+.transition-hover {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.transition-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important;
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
+}
+
+.btn {
+    transition: all 0.2s ease;
+}
+.btn:hover {
+    transform: translateY(-2px);
+}
+.nav-link {
+    transition: background-color 0.2s ease, color 0.2s ease;
+}

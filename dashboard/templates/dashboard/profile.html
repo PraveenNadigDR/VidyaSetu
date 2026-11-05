@@ -1,0 +1,146 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Student Profile | Vidya Setu{% endblock %}
+{% block page_title %}Student Merit Profile{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-0">
+  <div class="position-relative overflow-hidden bg-primary bg-gradient text-white p-4 p-md-5 rounded-4 mb-4 d-flex flex-column flex-md-row align-items-center text-center text-md-start gap-4 shadow">
+    <div class="position-absolute top-0 end-0 translate-middle-y" style="width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); margin-top: -30px; margin-right: -30px;"></div>
+    
+    <div class="position-relative z-1 flex-shrink-0 bg-white bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center text-white fw-bold border border-white border-opacity-25 shadow-sm" style="width: 80px; height: 80px; font-size: 28px; backdrop-filter: blur(4px);">
+      {{ student.get_initials }}
+    </div>
+    
+    <div class="position-relative z-1 flex-grow-1">
+      <h2 class="fw-bold mb-1 h3">{{ student.name }}</h2>
+      <p class="mb-3 text-primary-subtle" style="font-size: 0.95rem;">
+        {{ student.department }} &bull; Semester {{ student.semester }} &bull; USN: <strong class="text-white fw-semibold">{{ student.roll_no }}</strong>
+      </p>
+      <div class="d-flex justify-content-center justify-content-md-start gap-3 align-items-center mt-2">
+        <span class="badge bg-white bg-opacity-20 text-white rounded-pill px-3 py-2 fw-medium border border-white border-opacity-10 shadow-sm">
+          <i class="bi bi-star-fill text-warning me-1"></i> {{ badge_info.badge }}
+        </span>
+        <span class="text-primary-subtle small fw-medium">
+          <i class="bi bi-lightning-charge-fill text-warning me-1"></i>{{ merit_points }} Verified Points
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-sm-6 col-lg-3">
+      <div class="card shadow-sm border-0 h-100 rounded-4 p-4 text-center text-sm-start">
+        <div class="text-muted small fw-bold text-uppercase mb-2">Total Submissions</div>
+        <div class="fs-1 fw-bold text-dark mt-auto">{{ total_achievements }}</div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card shadow-sm border-0 h-100 rounded-4 p-4 text-center text-sm-start">
+        <div class="text-muted small fw-bold text-uppercase mb-2">Verified Valid</div>
+        <div class="fs-1 fw-bold text-success mt-auto">{{ verified_achievements }}</div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card shadow-sm border-0 h-100 rounded-4 p-4 text-center text-sm-start">
+        <div class="text-muted small fw-bold text-uppercase mb-2">Under Evaluation</div>
+        <div class="fs-1 fw-bold text-warning mt-auto">{{ pending_achievements }}</div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+      <div class="card shadow-sm border-0 h-100 rounded-4 p-4 text-center text-sm-start bg-primary-subtle">
+        <div class="text-primary small fw-bold text-uppercase mb-2">Active Merit Score</div>
+        <div class="fs-1 fw-bold text-primary mt-auto">{{ merit_points }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 mb-4 rounded-4">
+    <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+      <h3 class="h5 fw-bold mb-0 text-dark">Academic & Institutional Credentials</h3>
+    </div>
+    <div class="card-body px-4 pb-4">
+      <div class="row g-4">
+        <div class="col-sm-6 col-md-4">
+          <div class="text-muted small fw-bold text-uppercase mb-1">Full Name</div>
+          <div class="text-dark fw-medium">{{ student.name }}</div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="text-muted small fw-bold text-uppercase mb-1">Roll Number (USN)</div>
+          <div class="text-dark fw-medium">{{ student.roll_no }}</div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="text-muted small fw-bold text-uppercase mb-1">Institutional Email</div>
+          <div class="text-dark fw-medium">{{ student.email }}</div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="text-muted small fw-bold text-uppercase mb-1">Department / Branch</div>
+          <div class="text-dark fw-medium">{{ student.department }}</div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="text-muted small fw-bold text-uppercase mb-1">Current Semester</div>
+          <div class="text-dark fw-medium">Semester {{ student.semester }}</div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+          <div class="text-muted small fw-bold text-uppercase mb-1">Wallet Status</div>
+          <div class="text-success fw-bold d-flex align-items-center">
+            <span class="d-inline-block bg-success rounded-circle me-2" style="width: 8px; height: 8px;"></span>
+            Active
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4 mb-4">
+    <div class="card-header bg-white border-0 pt-4 pb-3 px-4 d-flex justify-content-between align-items-center">
+      <h3 class="h5 fw-bold mb-0 text-dark">Recent Submissions</h3>
+      <a href="{% url 'achievements' %}" class="btn btn-light btn-sm text-primary border border-secondary-subtle fw-medium rounded-pill px-3 shadow-sm">View Portfolio</a>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="text-muted small fw-bold text-uppercase py-3 ps-4 border-bottom-0">Title</th>
+              <th class="text-muted small fw-bold text-uppercase py-3 border-bottom-0">Category</th>
+              <th class="text-muted small fw-bold text-uppercase py-3 border-bottom-0">Date</th>
+              <th class="text-muted small fw-bold text-uppercase py-3 border-bottom-0">Status</th>
+              <th class="text-muted small fw-bold text-uppercase py-3 pe-4 text-end border-bottom-0">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in recent_achievements %}
+            <tr>
+              <td class="fw-medium text-dark py-3 ps-4 border-light">{{ item.title }}</td>
+              <td class="py-3 border-light">
+                <span class="badge bg-light text-secondary border border-secondary-subtle rounded-pill fw-normal px-2 py-1">
+                  {{ item.category }}
+                </span>
+              </td>
+              <td class="text-muted py-3 border-light small">{{ item.achievement_date|date:"M d, Y" }}</td>
+              <td class="py-3 border-light">
+                {% if item.status == 'VERIFIED' %}
+                  <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle rounded-pill px-2 py-1">Verified</span>
+                {% elif item.status == 'PENDING' %}
+                  <span class="badge bg-warning bg-opacity-10 text-warning border border-warning-subtle rounded-pill px-2 py-1">Pending</span>
+                {% else %}
+                  <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle rounded-pill px-2 py-1">Rejected</span>
+                {% endif %}
+              </td>
+              <td class="text-end fw-bold text-primary py-3 pe-4 border-light">+{{ item.points }} pts</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="5" class="text-center py-5 text-muted border-light">
+                <p class="mb-0">No submissions recorded yet.</p>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Dashboard | Vidya Setu{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome Banner -->
+<div class="card bg-primary text-white mb-4 border-0 shadow-sm position-relative overflow-hidden" data-aos="fade-down" data-aos-duration="600">
+  <div class="position-absolute top-0 end-0 translate-middle-y" style="width: 250px; height: 250px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); border-radius: 50%; right: -50px;"></div>
+  <div class="card-body p-4 p-md-5 d-flex flex-column flex-md-row justify-content-between align-items-md-center position-relative z-1">
+    <div class="mb-3 mb-md-0">
+      <h1 class="h3 fw-bold mb-2">Welcome back, {{ student.name }}</h1>
+      <p class="mb-0 text-white-50">Your achievements, certificates and merit progress — all in one place.</p>
+    </div>
+    <div class="text-md-end">
+      <div class="text-uppercase text-white-50 fw-semibold mb-2" style="font-size: 12px; letter-spacing: 0.5px;">Current Merit Badge</div>
+      <div class="badge border border-white-50 p-2 px-3 rounded-pill bg-white bg-opacity-10 backdrop-blur" style="font-size: 14px;">
+        <i class="bi bi-trophy-fill text-warning me-1"></i> {{ badge_info.badge }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row g-4 mb-4">
+  <div class="col-sm-6 col-xl-3" data-aos="fade-up" data-aos-delay="100">
+    <div class="card h-100 border-0 shadow-sm transition-hover">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="card-subtitle text-muted fw-semibold mb-0">Total Achievements</h6>
+          <div class="bg-light text-secondary rounded p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+            <i class="bi bi-award fs-5"></i>
+          </div>
+        </div>
+        <h2 class="fw-bold mb-1">{{ total_achievements }}</h2>
+        <small class="text-muted">Achievements submitted</small>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-sm-6 col-xl-3" data-aos="fade-up" data-aos-delay="200">
+    <div class="card h-100 border-0 shadow-sm transition-hover">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="card-subtitle text-muted fw-semibold mb-0">Verified</h6>
+          <div class="bg-success-subtle text-success rounded p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+            <i class="bi bi-check-circle fs-5"></i>
+          </div>
+        </div>
+        <h2 class="fw-bold mb-1 text-success">{{ verified_achievements }}</h2>
+        <small class="text-muted">Successfully verified</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3" data-aos="fade-up" data-aos-delay="300">
+    <div class="card h-100 border-0 shadow-sm transition-hover">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="card-subtitle text-muted fw-semibold mb-0">Pending</h6>
+          <div class="bg-warning-subtle text-warning rounded p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+            <i class="bi bi-clock-history fs-5"></i>
+          </div>
+        </div>
+        <h2 class="fw-bold mb-1 text-warning">{{ pending_achievements }}</h2>
+        <small class="text-muted">Awaiting verification</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-xl-3" data-aos="fade-up" data-aos-delay="400">
+    <div class="card h-100 border-0 shadow-sm transition-hover">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="card-subtitle text-muted fw-semibold mb-0">Merit Points</h6>
+          <div class="bg-primary-subtle text-primary rounded p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+            <i class="bi bi-star-fill fs-5"></i>
+          </div>
+        </div>
+        <h2 class="fw-bold mb-1 text-primary">{{ merit_points }}</h2>
+        <small class="text-muted">Total earned points</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Merit Progress -->
+<div class="card border-0 shadow-sm mb-4" data-aos="fade-up" data-aos-delay="100">
+  <div class="card-body p-4">
+    <div class="d-flex justify-content-between align-items-end mb-3">
+      <div>
+        <h5 class="fw-semibold mb-1">Merit Progress</h5>
+        <p class="text-muted mb-0 small">Current badge: <span class="fw-semibold text-dark">{{ badge_info.badge }}</span> • Current points: <span class="fw-semibold text-dark">{{ merit_points }}</span></p>
+      </div>
+      {% if badge_info.points_needed > 0 %}
+      <div class="text-end">
+        <p class="text-muted mb-1 small">Next badge: <span class="fw-semibold text-dark">{{ badge_info.next_badge }}</span></p>
+        <div class="fw-semibold text-primary small">{{ merit_points }} / {{ badge_info.next_tier_points }} pts</div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="progress mb-2" style="height: 10px;">
+      <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" style="width: {{ badge_info.progress }}%;"></div>
+    </div>
+    <div class="d-flex justify-content-between text-muted" style="font-size: 12px;">
+      <span>Beginner (0)</span>
+      <span>Achiever (100)</span>
+      <span>Star (300)</span>
+      <span>Champion (600)</span>
+    </div>
+  </div>
+</div>
+
+<!-- Layout: Recent & Quick Actions -->
+<div class="row g-4">
+  <!-- Recent Achievements -->
+  <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
+        <h5 class="fw-semibold mb-0">Recent Achievements</h5>
+        <a href="{% url 'achievements' %}" class="btn btn-sm btn-outline-secondary">View All</a>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="text-muted small text-uppercase">
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th class="text-end">Points</th>
+              </tr>
+            </thead>
+            <tbody class="border-top-0">
+              {% for item in recent_achievements %}
+              <tr>
+                <td>
+                  <div class="fw-semibold text-dark">{{ item.title }}</div>
+                  <div class="text-muted small">{{ item.organization }} • {{ item.achievement_date|date:"M d, Y" }}</div>
+                </td>
+                <td>
+                  <span class="badge bg-light text-secondary border">{{ item.category }}</span>
+                </td>
+                <td>
+                  {% if item.status == 'VERIFIED' %}
+                    <span class="badge bg-success-subtle text-success">Verified</span>
+                  {% elif item.status == 'PENDING' %}
+                    <span class="badge bg-warning-subtle text-warning">Pending</span>
+                  {% else %}
+                    <span class="badge bg-danger-subtle text-danger">Rejected</span>
+                  {% endif %}
+                </td>
+                <td class="text-end fw-semibold text-primary">+{{ item.points }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="text-center py-5 text-muted">
+                  <i class="bi bi-inbox fs-2 d-block mb-3"></i>
+                  <p class="mb-3">No achievements registered yet.</p>
+                  <a href="{% url 'add_achievement' %}" class="btn btn-primary btn-sm">Add Achievement</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+        <h5 class="fw-semibold mb-0">Quick Actions</h5>
+      </div>
+      <div class="card-body d-flex flex-column gap-3">
+        <a href="{% url 'add_achievement' %}" class="btn btn-primary text-start p-3 shadow-sm">
+          <i class="bi bi-plus-circle me-2"></i> Submit New Achievement
+        </a>
+        <a href="{% url 'certificates' %}" class="btn btn-outline-secondary text-start p-3 shadow-sm">
+          <i class="bi bi-file-earmark-text me-2"></i> View My Certificates
+        </a>
+        <a href="{% url 'leaderboard' %}" class="btn btn-outline-secondary text-start p-3 shadow-sm">
+          <i class="bi bi-trophy me-2"></i> Check Leaderboard
+        </a>
+
+        <div class="mt-auto bg-light rounded p-3 border">
+          <h6 class="fw-semibold mb-2" style="font-size: 14px;"><i class="bi bi-info-circle me-1"></i> Need help?</h6>
+          <p class="text-muted small mb-2">Contact your department coordinator for verification issues.</p>
+          <a href="#" class="text-decoration-none small fw-semibold">Contact Support <i class="bi bi-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

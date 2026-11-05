@@ -1,0 +1,47 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Certificates | Vidya Setu{% endblock %}
+{% block page_title %}Digital Certificate Repository{% endblock %}
+
+{% block content %}
+<div class="d-flex mb-4 gap-2 flex-wrap">
+  <a href="{% url 'student_certificates' %}" class="btn {% if not selected_category %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-4">All</a>
+  {% for cat in categories %}
+  <a href="?category={{ cat.category|urlencode }}" class="btn {% if selected_category == cat.category %}btn-primary{% else %}btn-outline-secondary{% endif %} rounded-pill px-4">{{ cat.category }}</a>
+  {% endfor %}
+</div>
+
+<div class="row g-4">
+  {% for ach in achievements %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 bg-white">
+      {% if ach.is_image %}
+      <img src="{{ ach.certificate.url }}" class="card-img-top" alt="Certificate" style="height: 200px; object-fit: cover; object-position: top;">
+      {% else %}
+      <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+        <i class="bi bi-file-earmark-pdf text-danger display-1"></i>
+      </div>
+      {% endif %}
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-start mb-1">
+          <h6 class="fw-bold mb-0">{{ ach.title }}</h6>
+          <span class="badge bg-light text-secondary border" style="font-family: monospace;">{{ ach.achievement_id }}</span>
+        </div>
+        <p class="text-muted small mb-2">{{ ach.organization }} &bull; {{ ach.achievement_date|date:"M Y" }}</p>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <span class="badge status-{{ ach.status }} rounded-pill border">{{ ach.get_status_display }}</span>
+          <a href="{{ ach.certificate.url }}" target="_blank" class="btn btn-sm btn-outline-primary">View</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12 text-center py-5">
+    <div class="text-muted mb-3"><i class="bi bi-file-earmark-x display-4"></i></div>
+    <h5 class="fw-bold">No certificates found</h5>
+    <p class="text-muted">You haven't uploaded any certificates yet.</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+

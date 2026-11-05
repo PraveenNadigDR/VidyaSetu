@@ -1,0 +1,185 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ achievement.title }} | Vidya Setu{% endblock %}
+{% block page_title %}Achievement Verification{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="max-width: 1000px;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{% url 'achievements' %}" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Achievements</a>
+    <span class="badge bg-light text-secondary border px-3 py-2 fw-semibold fs-6">
+      {{ achievement.category }}
+    </span>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Details -->
+    <div class="col-lg-8">
+      <!-- Verification Status -->
+      {% if achievement.status == 'VERIFIED' %}
+        <div class="card border-0 shadow-sm mb-4 border-start border-success border-4">
+          <div class="card-body d-flex gap-3 align-items-start p-4">
+            <i class="bi bi-check-circle-fill fs-2 text-success"></i>
+            <div>
+              <h5 class="fw-bold text-dark mb-1">Achievement Verified</h5>
+              <p class="text-muted mb-0">This achievement has been verified. <strong>+{{ achievement.points }} Merit Points</strong> have been added to your profile.</p>
+            </div>
+          </div>
+        </div>
+      {% elif achievement.status == 'PENDING' %}
+        <div class="card border-0 shadow-sm mb-4 border-start border-warning border-4">
+          <div class="card-body d-flex gap-3 align-items-start p-4">
+            <i class="bi bi-clock-history fs-2 text-warning"></i>
+            <div>
+              <h5 class="fw-bold text-dark mb-1">Verification Pending</h5>
+              <p class="text-muted mb-0">Your submission is under review. Points will be credited once validated.</p>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="card border-0 shadow-sm mb-4 border-start border-danger border-4">
+          <div class="card-body d-flex gap-3 align-items-start p-4">
+            <i class="bi bi-x-circle-fill fs-2 text-danger"></i>
+            <div>
+              <h5 class="fw-bold text-dark mb-1">Achievement Rejected</h5>
+              <p class="text-muted mb-0">The submitted proof does not satisfy the criteria.</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Achievement Details -->
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom pt-4 pb-3 d-flex justify-content-between align-items-center">
+          <h4 class="card-title fw-bold mb-0">{{ achievement.title }}</h4>
+          <div class="fs-5 fw-bold text-primary">
+            {% if achievement.status == 'VERIFIED' %}
+              +{{ achievement.points }} Points
+            {% else %}
+              {{ achievement.points }} Potential Points
+            {% endif %}
+          </div>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-4 mb-4">
+            <div class="col-sm-6">
+              <div class="text-muted text-uppercase fw-semibold small mb-1" style="font-size: 11px;">Organization</div>
+              <div class="fw-semibold text-dark">{{ achievement.organization }}</div>
+            </div>
+            <div class="col-sm-6">
+              <div class="text-muted text-uppercase fw-semibold small mb-1" style="font-size: 11px;">Achievement Date</div>
+              <div class="fw-semibold text-dark">{{ achievement.achievement_date|date:"F d, Y" }}</div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="text-muted text-uppercase fw-semibold small mb-2" style="font-size: 11px;">Description</div>
+            <div class="bg-light p-3 rounded border text-dark" style="font-size: 14px; line-height: 1.6;">
+              {{ achievement.description }}
+            </div>
+          </div>
+
+          <div>
+            <div class="text-muted text-uppercase fw-semibold small mb-2" style="font-size: 11px;">Proof Document</div>
+            {% if achievement.certificate %}
+              <div class="border rounded p-3 d-flex justify-content-between align-items-center bg-white shadow-sm mb-3">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="fs-3 text-primary">{% if achievement.is_pdf %}<i class="bi bi-file-earmark-pdf-fill"></i>{% else %}<i class="bi bi-image-fill"></i>{% endif %}</div>
+                  <div>
+                    <div class="fw-semibold small text-truncate" style="max-width: 250px;">{{ achievement.certificate.name|slice:"13:" }}</div>
+                    <div class="text-muted" style="font-size: 12px;">{{ achievement.file_extension|upper }} Document</div>
+                  </div>
+                </div>
+                <a href="{{ achievement.certificate.url }}" target="_blank" class="btn btn-sm btn-primary">View</a>
+              </div>
+              {% if achievement.is_image %}
+              <div class="border rounded overflow-hidden bg-dark d-flex justify-content-center mt-3 shadow-sm">
+                <img src="{{ achievement.certificate.url }}" alt="Certificate preview" class="img-fluid" style="max-height: 500px; object-fit: contain;">
+              </div>
+              {% endif %}
+            {% else %}
+              <div class="p-3 bg-light border border-dashed rounded text-center text-muted small">
+                No document attached.
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Timeline -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom pt-4 pb-3">
+          <h5 class="card-title fw-semibold mb-0">Achievement Journey</h5>
+        </div>
+        <div class="card-body p-4">
+          <div class="timeline">
+            <!-- Step 1 -->
+            <div class="timeline-item">
+              <div class="timeline-dot active text-primary fs-5">
+                <i class="bi bi-check2"></i>
+              </div>
+              <div class="pt-1">
+                <div class="text-muted small mb-1">{{ achievement.created_at|date:"M d, Y" }}</div>
+                <div class="fw-semibold text-dark">Submitted</div>
+                <div class="text-muted small">Achievement recorded</div>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="timeline-item">
+              <div class="timeline-dot {% if achievement.status == 'VERIFIED' or achievement.status == 'REJECTED' %}active text-primary{% else %}text-muted{% endif %} fs-5">
+                {% if achievement.status == 'PENDING' %}
+                  <i class="bi bi-circle"></i>
+                {% else %}
+                  <i class="bi bi-check2"></i>
+                {% endif %}
+              </div>
+              <div class="pt-1">
+                <div class="text-muted small mb-1">Pending</div>
+                <div class="fw-semibold text-dark">Under Review</div>
+                <div class="text-muted small">Department committee review</div>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="timeline-item">
+              <div class="timeline-dot {% if achievement.status == 'VERIFIED' or achievement.status == 'REJECTED' %}active{% endif %} fs-5" style="{% if achievement.status == 'REJECTED' %}border-color: var(--bs-danger); background-color: var(--bs-danger-bg-subtle); color: var(--bs-danger);{% elif achievement.status == 'VERIFIED' %}border-color: var(--bs-success); background-color: var(--bs-success-bg-subtle); color: var(--bs-success);{% endif %}">
+                {% if achievement.status == 'VERIFIED' %}
+                  <i class="bi bi-check2"></i>
+                {% elif achievement.status == 'REJECTED' %}
+                  <i class="bi bi-x"></i>
+                {% endif %}
+              </div>
+              <div class="pt-1">
+                <div class="text-muted small mb-1">
+                  {% if verification and verification.verified_at %}
+                    {{ verification.verified_at|date:"M d, Y" }}
+                  {% else %}
+                    Decision
+                  {% endif %}
+                </div>
+                <div class="fw-semibold text-dark">
+                  {% if achievement.status == 'VERIFIED' %}
+                    Verified
+                  {% elif achievement.status == 'REJECTED' %}
+                    Rejected
+                  {% else %}
+                    Final Decision
+                  {% endif %}
+                </div>
+                {% if verification and verification.remarks %}
+                <div class="mt-2 p-2 bg-light border rounded small text-muted fst-italic">
+                  "{{ verification.remarks }}"
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

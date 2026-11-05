@@ -1,0 +1,91 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Verify Achievement | Vidya Setu{% endblock %}
+{% block page_title %}Verify Achievement{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card bg-white border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-bottom py-3">
+        <h5 class="fw-bold mb-0">Achievement Details</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <div class="text-muted small fw-bold text-uppercase">Student</div>
+          <div class="fw-bold fs-5">{{ achievement.student.name }} ({{ achievement.student.roll_no }})</div>
+          <div class="text-muted">{{ achievement.student.department }}, Semester {{ achievement.student.semester }}</div>
+        </div>
+        
+        <hr>
+        
+        <div class="mb-3">
+          <div class="text-muted small fw-bold text-uppercase">Title</div>
+          <div class="fw-bold fs-5">{{ achievement.title }}</div>
+          {% if achievement.achievement_id %}
+          <div class="mt-1"><span class="badge bg-light text-dark border">ID: {{ achievement.achievement_id }}</span></div>
+          {% endif %}
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-6">
+            <div class="text-muted small fw-bold text-uppercase">Category</div>
+            <div class="fw-bold">{{ achievement.rule.category }}</div>
+          </div>
+          <div class="col-6">
+            <div class="text-muted small fw-bold text-uppercase">Potential Points</div>
+            <div class="fw-bold text-success">+{{ achievement.rule.points }}</div>
+          </div>
+        </div>
+        
+        <div class="row mb-3">
+          <div class="col-6">
+            <div class="text-muted small fw-bold text-uppercase">Organization</div>
+            <div>{{ achievement.organization }}</div>
+          </div>
+          <div class="col-6">
+            <div class="text-muted small fw-bold text-uppercase">Date</div>
+            <div>{{ achievement.achievement_date|date:"M d, Y" }}</div>
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <div class="text-muted small fw-bold text-uppercase">Description</div>
+          <div>{{ achievement.description }}</div>
+        </div>
+        
+        <div class="bg-light p-3 rounded border">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label fw-bold small text-muted">Verification Note (Optional)</label>
+              <textarea name="note" class="form-control" rows="2" placeholder="e.g. Verified from official website..."></textarea>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="submit" name="action" value="verify" class="btn btn-success flex-grow-1"><i class="bi bi-check-circle me-1"></i> Verify & Award Points</button>
+              <button type="submit" name="action" value="reject" class="btn btn-outline-danger flex-grow-1"><i class="bi bi-x-circle me-1"></i> Reject</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="col-lg-6">
+    <div class="card bg-white border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0">Certificate Proof</h5>
+        <a href="{{ achievement.certificate.url }}" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-box-arrow-up-right me-1"></i> Open Full</a>
+      </div>
+      <div class="card-body p-0 d-flex justify-content-center bg-light">
+        {% if achievement.is_image %}
+          <img src="{{ achievement.certificate.url }}" style="max-width: 100%; max-height: 700px; object-fit: contain;">
+        {% else %}
+          <iframe src="{{ achievement.certificate.url }}" width="100%" height="700px" style="border: none;"></iframe>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

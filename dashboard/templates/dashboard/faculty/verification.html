@@ -1,0 +1,51 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Verify Achievements | Vidya Setu{% endblock %}
+{% block page_title %}Achievement Verification{% endblock %}
+
+{% block content %}
+<div class="card bg-white border-0 shadow-sm">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4">Student</th>
+            <th>Achievement ID</th>
+            <th>Achievement Title</th>
+            <th>Category</th>
+            <th>Potential Points</th>
+            <th class="text-end pe-4">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ach in pending %}
+          <tr>
+            <td class="ps-4 fw-bold">
+              <div>{{ ach.student.name }}</div>
+              <div class="small text-muted">{{ ach.student.roll_no }}</div>
+            </td>
+            <td><span class="badge bg-light text-dark border">{{ ach.achievement_id|default:"-" }}</span></td>
+            <td class="fw-bold">{{ ach.title }}</td>
+            <td>{{ ach.rule.category }}</td>
+            <td class="text-success fw-bold">+{{ ach.rule.points }}</td>
+            <td class="text-end pe-4">
+              <a href="{% url 'faculty_verify_action' ach.id %}" class="btn btn-sm btn-primary">Review</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center py-5 text-muted">
+              <i class="bi bi-check-circle display-4 d-block mb-3 text-success opacity-50"></i>
+              <h5 class="fw-bold">All caught up!</h5>
+              <p>No pending achievements to verify.</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

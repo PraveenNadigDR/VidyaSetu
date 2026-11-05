@@ -1,0 +1,44 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Merit Rules | Vidya Setu{% endblock %}
+{% block page_title %}Manage Merit Rules{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8 mx-auto">
+    <div class="card bg-white border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom py-3">
+        <h5 class="fw-bold mb-0">Achievement Categories</h5>
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th class="ps-4">Category</th>
+              <th class="text-end">Current Points</th>
+              <th class="text-end pe-4" style="width: 150px;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for rule in rules %}
+            <tr>
+              <td class="ps-4 fw-bold">{{ rule.category }}</td>
+              <td class="text-end text-success fw-bold">+{{ rule.points }}</td>
+              <td class="text-end pe-4">
+                <form method="POST" class="d-flex align-items-center gap-2">
+                  {% csrf_token %}
+                  <input type="hidden" name="rule_id" value="{{ rule.id }}">
+                  <input type="number" name="points" value="{{ rule.points }}" class="form-control form-control-sm text-end" style="width: 70px;" required>
+                  <button type="submit" class="btn btn-sm btn-outline-primary">Save</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

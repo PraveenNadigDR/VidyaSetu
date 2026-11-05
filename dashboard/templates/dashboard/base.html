@@ -1,0 +1,260 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Vidya Setu - Digital Merit Wallet{% endblock %}</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  
+  <style>
+    :root {
+      --primary: #1e3a8a; /* Deep Navy */
+      --primary-hover: #1e40af;
+      --primary-subtle: #eff6ff;
+      --secondary: #334155; /* Slate */
+      --success: #16a34a;
+      --success-subtle: #dcfce7;
+      --warning: #d97706;
+      --warning-subtle: #fef3c7;
+      --danger: #dc2626;
+      --danger-subtle: #fee2e2;
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+    
+    body {
+        font-family: 'Times New Roman', Times, serif !important;
+        background-color: var(--bg-main) !important;
+        color: var(--text-main);
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Times New Roman', Times, serif !important;
+        color: var(--secondary);
+    }
+
+    .sidebar {
+        background-color: var(--bg-card);
+        border-right: 1px solid var(--border-color);
+        transition: all 0.3s;
+    }
+    
+    .nav-link {
+        color: var(--text-main);
+        border-radius: 0.375rem;
+        margin-bottom: 0.25rem;
+        padding: 0.75rem 1rem;
+        transition: all 0.2s ease;
+    }
+    
+    .nav-link:hover {
+        background-color: var(--primary-subtle);
+        color: var(--primary);
+    }
+    
+    .nav-link.active {
+        background-color: var(--primary);
+        color: white;
+    }
+
+    .nav-link.active i {
+        color: white !important;
+    }
+
+    .card {
+        border-radius: 0.5rem;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .btn {
+        border-radius: 0.375rem;
+        font-weight: 500;
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+
+    /* Status Badges */
+    .status-VERIFIED { background-color: var(--success-subtle); color: var(--success); }
+    .status-PENDING { background-color: var(--warning-subtle); color: var(--warning); }
+    .status-REJECTED { background-color: var(--danger-subtle); color: var(--danger); }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div class="d-flex" style="min-height: 100vh;">
+    <!-- Sidebar -->
+    <aside class="sidebar d-flex flex-column" style="width: 260px; position: fixed; top: 0; bottom: 0; z-index: 1000;">
+      <div class="d-flex align-items-center border-bottom px-4" style="height: 72px;">
+        <a href="{% url 'root_redirect' %}" class="text-decoration-none d-flex align-items-center gap-2 text-dark">
+          <img src="{% static 'dashboard/images/logo.jpg' %}" alt="Logo" style="height: 40px; width: 40px; object-fit: contain;">
+          <div>
+            <h1 class="h5 mb-0 fw-bold" style="color: var(--primary);">Vidya Setu</h1>
+            <small class="text-muted" style="font-size: 11px;">Digital Merit Wallet</small>
+          </div>
+        </a>
+      </div>
+
+      <div class="flex-grow-1 overflow-auto py-3 px-3">
+        <ul class="nav flex-column gap-1">
+          {% if request.user.is_superuser %}
+          <!-- HOD Navigation -->
+          <li class="nav-item">
+            <a href="{% url 'hod_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'hod_dashboard' %}active{% endif %}">
+              <i class="bi bi-grid text-muted me-2"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'hod_faculty' %}" class="nav-link {% if 'hod_faculty' in request.resolver_match.url_name %}active{% endif %}">
+              <i class="bi bi-people text-muted me-2"></i> Faculty Management
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'hod_rules' %}" class="nav-link {% if request.resolver_match.url_name == 'hod_rules' %}active{% endif %}">
+              <i class="bi bi-gear text-muted me-2"></i> Merit Rules
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'hod_leaderboard' %}" class="nav-link {% if request.resolver_match.url_name == 'hod_leaderboard' %}active{% endif %}">
+              <i class="bi bi-trophy text-muted me-2"></i> Leaderboard
+            </a>
+          </li>
+          
+          {% elif request.user.faculty_profile %}
+          <!-- Faculty Navigation -->
+          <li class="nav-item">
+            <a href="{% url 'faculty_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'faculty_dashboard' %}active{% endif %}">
+              <i class="bi bi-grid text-muted me-2"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'faculty_verification' %}" class="nav-link {% if 'faculty_verif' in request.resolver_match.url_name %}active{% endif %}">
+              <i class="bi bi-check2-square text-muted me-2"></i> Verifications
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'faculty_students' %}" class="nav-link {% if 'faculty_student' in request.resolver_match.url_name %}active{% endif %}">
+              <i class="bi bi-mortarboard text-muted me-2"></i> Students
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'faculty_leaderboard' %}" class="nav-link {% if request.resolver_match.url_name == 'faculty_leaderboard' %}active{% endif %}">
+              <i class="bi bi-trophy text-muted me-2"></i> Leaderboard
+            </a>
+          </li>
+          
+          {% else %}
+          <!-- Student Navigation -->
+          <li class="nav-item">
+            <a href="{% url 'student_dashboard' %}" class="nav-link {% if request.resolver_match.url_name == 'student_dashboard' %}active{% endif %}">
+              <i class="bi bi-grid text-muted me-2"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'student_add_achievement' %}" class="nav-link {% if request.resolver_match.url_name == 'student_add_achievement' %}active{% endif %}">
+              <i class="bi bi-plus-circle text-muted me-2"></i> Submit Achievement
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'student_certificates' %}" class="nav-link {% if request.resolver_match.url_name == 'student_certificates' %}active{% endif %}">
+              <i class="bi bi-file-earmark-medical text-muted me-2"></i> Certificates
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'student_leaderboard' %}" class="nav-link {% if request.resolver_match.url_name == 'student_leaderboard' %}active{% endif %}">
+              <i class="bi bi-trophy text-muted me-2"></i> Leaderboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'student_rules' %}" class="nav-link {% if request.resolver_match.url_name == 'student_rules' %}active{% endif %}">
+              <i class="bi bi-info-circle text-muted me-2"></i> Merit Rules
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="border-top p-3">
+        <ul class="nav flex-column gap-1">
+          <li class="nav-item">
+            {% if request.user.is_superuser %}
+              <a href="{% url 'hod_profile' %}" class="nav-link {% if request.resolver_match.url_name == 'hod_profile' %}active{% endif %}"><i class="bi bi-person text-muted me-2"></i> Profile</a>
+            {% elif request.user.faculty_profile %}
+              <a href="{% url 'faculty_profile' %}" class="nav-link {% if request.resolver_match.url_name == 'faculty_profile' %}active{% endif %}"><i class="bi bi-person text-muted me-2"></i> Profile</a>
+            {% else %}
+              <a href="{% url 'student_profile' %}" class="nav-link {% if request.resolver_match.url_name == 'student_profile' %}active{% endif %}"><i class="bi bi-person text-muted me-2"></i> Profile</a>
+            {% endif %}
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'logout' %}" class="nav-link text-danger"><i class="bi bi-box-arrow-right me-2 text-danger"></i> Logout</a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-grow-1" style="margin-left: 260px;">
+      <!-- Topbar -->
+      <header class="bg-white border-bottom d-flex align-items-center justify-content-between px-4 sticky-top" style="height: 72px; z-index: 999;">
+        <h2 class="h5 mb-0 fw-bold">{% block page_title %}Dashboard{% endblock %}</h2>
+        
+        <div class="d-flex align-items-center gap-3">
+          <div class="text-end d-none d-md-block">
+            {% if request.user.is_superuser %}
+              <div class="fw-bold" style="font-size: 14px;">Administrator</div>
+              <div class="text-muted" style="font-size: 12px;">HOD Portal</div>
+            {% elif request.user.faculty_profile %}
+              <div class="fw-bold" style="font-size: 14px;">{{ request.user.faculty_profile.name }}</div>
+              <div class="text-muted" style="font-size: 12px;">Faculty Portal</div>
+            {% else %}
+              <div class="fw-bold" style="font-size: 14px;">{{ request.user.student_profile.name }}</div>
+              <div class="text-muted" style="font-size: 12px;">Student Portal</div>
+            {% endif %}
+          </div>
+          <div class="bg-light text-primary border rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 36px; height: 36px;">
+            <i class="bi bi-person-fill"></i>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page Content -->
+      <main class="container-fluid py-4 px-4" style="max-width: 1200px;">
+        {% if messages %}
+        <div class="mb-4">
+          {% for message in messages %}
+          <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}success{% endif %} alert-dismissible fade show border-0 shadow-sm">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

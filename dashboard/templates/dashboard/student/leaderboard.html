@@ -1,0 +1,53 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Leaderboard | Vidya Setu{% endblock %}
+{% block page_title %}Student Leaderboard{% endblock %}
+
+{% block content %}
+<div class="card bg-white border-0 shadow-sm">
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4 text-center" style="width: 80px;">Rank</th>
+            <th>Student</th>
+            <th>USN</th>
+            <th>Department</th>
+            <th>Badge</th>
+            <th class="text-end pe-4">Merit Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for st in students %}
+          <tr class="{% if st == student %}table-primary{% endif %}">
+            <td class="ps-4 text-center fw-bold text-muted">#{{ forloop.counter }}</td>
+            <td class="fw-bold">
+              {{ st.name }}
+              {% if st == student %}<span class="badge bg-primary ms-2">You</span>{% endif %}
+            </td>
+            <td class="text-muted small">{{ st.roll_no }}</td>
+            <td class="text-muted small">{{ st.department }}</td>
+            <td>
+              <span class="badge {{ st.get_badge_info.css_class }} border rounded-pill text-dark" style="background-color: var(--warning-subtle);">
+                <i class="bi bi-star-fill text-warning me-1"></i> {{ st.get_badge }}
+              </span>
+            </td>
+            <td class="text-end pe-4 fw-bold text-primary">{{ st.get_merit_points }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center py-5 text-muted">
+              <i class="bi bi-trophy display-4 d-block mb-3"></i>
+              <h5 class="fw-bold">Leaderboard Empty</h5>
+              <p>No students have earned verified merit points yet.</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

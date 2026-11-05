@@ -1,0 +1,80 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Faculty Dashboard | Vidya Setu{% endblock %}
+{% block page_title %}Faculty Dashboard{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-5">
+  <div class="col-md-3">
+    <div class="card h-100 bg-white border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted fw-bold small text-uppercase mb-2">Total Students</div>
+        <h3 class="fw-bold text-primary mb-0">{{ total_students }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100 bg-white border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted fw-bold small text-uppercase mb-2">Pending Verifications</div>
+        <h3 class="fw-bold text-warning mb-0">{{ pending_verifications }}</h3>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card h-100 bg-white border-0 shadow-sm">
+      <div class="card-body">
+        <div class="text-muted fw-bold small text-uppercase mb-2">Verified Achievements</div>
+        <h3 class="fw-bold text-success mb-0">{{ verified_achievements }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card bg-white border-0 shadow-sm">
+  <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+    <h5 class="fw-bold mb-0">Recent Submissions (Pending)</h5>
+    <a href="{% url 'faculty_verification' %}" class="btn btn-sm btn-outline-primary">View All</a>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="ps-4">Student</th>
+            <th>Achievement Title</th>
+            <th>Category</th>
+            <th>Date Submitted</th>
+            <th class="text-end pe-4">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ach in recent_submissions %}
+          <tr>
+            <td class="ps-4 fw-bold">
+              <div>{{ ach.student.name }}</div>
+              <div class="small text-muted">{{ ach.student.roll_no }}</div>
+            </td>
+            <td class="fw-bold">{{ ach.title }}</td>
+            <td>{{ ach.rule.category }}</td>
+            <td>{{ ach.created_at|date:"M d, Y" }}</td>
+            <td class="text-end pe-4">
+              <a href="{% url 'faculty_verify_action' ach.id %}" class="btn btn-sm btn-primary">Review</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center py-5 text-muted">
+              <i class="bi bi-check-circle display-4 d-block mb-3 text-success opacity-50"></i>
+              <h5 class="fw-bold">All caught up!</h5>
+              <p>No pending achievements to verify.</p>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

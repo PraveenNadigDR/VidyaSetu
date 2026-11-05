@@ -1,0 +1,50 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Edit Student | Vidya Setu{% endblock %}
+{% block page_title %}Edit Student{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card bg-white border-0 shadow-sm">
+      <div class="card-body p-5">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Full Name</label>
+              <input type="text" name="name" class="form-control" value="{{ student_obj.name }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">USN / Roll Number (Username)</label>
+              <input type="text" class="form-control" value="{{ student_obj.roll_no }}" disabled>
+              <div class="form-text">USN cannot be changed.</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Department</label>
+              <input type="text" name="department" class="form-control" value="{{ student_obj.department }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Semester</label>
+              <input type="number" name="semester" class="form-control" min="1" max="8" value="{{ student_obj.semester }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Email</label>
+              <input type="email" name="email" class="form-control" value="{{ student_obj.email }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-bold small text-muted">Reset Password (Optional)</label>
+              <input type="password" name="password" class="form-control" placeholder="Leave blank to keep current password">
+            </div>
+          </div>
+          <div class="mt-4 text-end">
+            <a href="{% url 'faculty_students' %}" class="btn btn-light me-2">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Student</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

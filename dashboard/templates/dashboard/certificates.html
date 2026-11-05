@@ -1,0 +1,98 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Certificates | Vidya Setu{% endblock %}
+{% block page_title %}Digital Certificate Repository{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+  <form method="GET" action="{% url 'certificates' %}" class="d-flex flex-wrap gap-2 align-items-center">
+    <div class="input-group input-group-sm" style="max-width: 260px;">
+      <span class="input-group-text bg-white text-muted border-end-0" id="search-addon"><i class="bi bi-search"></i></span>
+      <input type="text" name="q" value="{{ search_query }}" class="form-control border-start-0" placeholder="Search certificates..." aria-label="Search certificates" aria-describedby="search-addon">
+    </div>
+    
+    <select name="category" class="form-select form-select-sm text-secondary" style="max-width: 180px;" onchange="this.form.submit()">
+      <option value="">All Categories</option>
+      {% for cat in categories %}
+        <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-secondary btn-sm px-3 shadow-sm text-dark fw-medium">Filter</button>
+    {% if search_query or selected_category %}
+      <a href="{% url 'certificates' %}" class="btn btn-outline-secondary btn-sm px-3">Clear</a>
+    {% endif %}
+  </form>
+
+  <a href="{% url 'add_achievement' %}" class="btn btn-primary btn-sm px-3 shadow-sm fw-medium d-inline-flex align-items-center">
+    <i class="bi bi-cloud-upload me-2 fs-6"></i> Upload Proof
+  </a>
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-4">
+  {% for item in certificates %}
+  <div class="col" data-aos="zoom-in" data-aos-anchor-placement="top-bottom">
+    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+      <div class="position-relative bg-light d-flex align-items-center justify-content-center" style="height: 160px;">
+        {% if item.is_image %}
+          <img src="{{ item.certificate.url }}" alt="{{ item.title }}" class="w-100 h-100 object-fit-cover">
+        {% else %}
+          <div class="text-center text-secondary">
+            <i class="bi bi-file-earmark-pdf-fill fs-1 text-danger opacity-75 mb-2 d-block"></i>
+            <div class="fw-medium small">PDF Document</div>
+          </div>
+        {% endif %}
+        
+        <div class="position-absolute top-0 end-0 p-2">
+          {% if item.status == 'VERIFIED' %}
+            <span class="badge bg-success shadow-sm">Verified</span>
+          {% elif item.status == 'PENDING' %}
+            <span class="badge bg-warning text-dark shadow-sm">Pending</span>
+          {% else %}
+            <span class="badge bg-danger shadow-sm">Rejected</span>
+          {% endif %}
+        </div>
+      </div>
+      
+      <div class="card-body d-flex flex-column p-4">
+        <span class="badge bg-light text-secondary border border-secondary-subtle rounded-pill mb-3 align-self-start fw-normal px-2 py-1" style="font-size: 0.7rem;">
+          {{ item.category }}
+        </span>
+        
+        <h4 class="h6 fw-bold text-dark mb-2 lh-base" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+          {{ item.title }}
+        </h4>
+        
+        <div class="text-muted small mb-3 flex-grow-1">
+          <div class="mb-1"><i class="bi bi-building me-1 opacity-75"></i> {{ item.organization }}</div>
+          <div><i class="bi bi-calendar3 me-1 opacity-75"></i> {{ item.achievement_date|date:"d M Y" }}</div>
+        </div>
+        
+        <div class="pt-3 mt-auto border-top border-light d-flex justify-content-between align-items-center">
+          <span class="fw-bold text-primary small">+{{ item.points }} pts</span>
+          <div class="d-flex gap-2">
+            <a href="{{ item.certificate.url }}" target="_blank" class="btn btn-light btn-sm text-secondary border border-secondary-subtle px-2 shadow-sm" title="Open File">
+              <i class="bi bi-box-arrow-up-right"></i>
+            </a>
+            <a href="{% url 'achievement_detail' item.pk %}" class="btn btn-light btn-sm text-primary border border-secondary-subtle px-2 shadow-sm" title="Details">
+              <i class="bi bi-info-circle"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="card shadow-sm border-0 rounded-4 p-5 text-center bg-light">
+      <i class="bi bi-award fs-1 text-secondary opacity-50 mb-3"></i>
+      <h3 class="h5 fw-bold text-dark mb-2">No Certificates Uploaded Yet</h3>
+      <p class="text-muted mb-4">Upload certificate proof documents while submitting your achievements to verify them.</p>
+      <div>
+        <a href="{% url 'add_achievement' %}" class="btn btn-primary px-4 shadow-sm fw-medium">Add Achievement</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

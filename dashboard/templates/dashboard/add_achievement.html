@@ -1,0 +1,92 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Add Achievement | Vidya Setu{% endblock %}
+{% block page_title %}Submit New Achievement{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="max-width: 800px;">
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-bottom pt-4 pb-3 d-flex justify-content-between align-items-center">
+      <div>
+        <h5 class="card-title fw-bold mb-1">Add Achievement to Merit Wallet</h5>
+        <p class="text-muted small mb-0">Submit your academic or extracurricular achievement along with verifiable proof.</p>
+      </div>
+      <a href="{% url 'achievements' %}" class="btn btn-outline-secondary btn-sm">Cancel</a>
+    </div>
+
+    <div class="card-body p-4 p-md-5">
+      <form method="POST" enctype="multipart/form-data" action="{% url 'add_achievement' %}">
+        {% csrf_token %}
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold text-dark small" for="{{ form.title.id_for_label }}">Achievement Title <span class="text-danger">*</span></label>
+          {{ form.title }}
+          {% if form.title.errors %}
+            <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+          {% endif %}
+          <div class="form-text small">e.g., "Smart India Hackathon 2024 - 1st Runner Up"</div>
+        </div>
+
+        <div class="row g-4 mb-4">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-dark small" for="{{ form.category.id_for_label }}">Category <span class="text-danger">*</span></label>
+            {{ form.category }}
+            {% if form.category.errors %}
+              <div class="text-danger small mt-1">{{ form.category.errors.0 }}</div>
+            {% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold text-dark small" for="{{ form.achievement_date.id_for_label }}">Achievement Date <span class="text-danger">*</span></label>
+            {{ form.achievement_date }}
+            {% if form.achievement_date.errors %}
+              <div class="text-danger small mt-1">{{ form.achievement_date.errors.0 }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold text-dark small" for="{{ form.organization.id_for_label }}">Organization / Issued By <span class="text-danger">*</span></label>
+          {{ form.organization }}
+          {% if form.organization.errors %}
+            <div class="text-danger small mt-1">{{ form.organization.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label fw-semibold text-dark small" for="{{ form.description.id_for_label }}">Description & Highlights <span class="text-danger">*</span></label>
+          {{ form.description }}
+          {% if form.description.errors %}
+            <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="mb-4 pb-2">
+          <label class="form-label fw-semibold text-dark small" for="{{ form.certificate.id_for_label }}">Certificate / Proof Document</label>
+          <div class="border border-2 border-dashed rounded p-5 text-center bg-light transition-hover cursor-pointer" 
+               onclick="document.getElementById('{{ form.certificate.id_for_label }}').click()"
+               onmouseover="this.classList.replace('bg-light', 'bg-primary-subtle'); this.classList.replace('border-secondary', 'border-primary');" 
+               onmouseout="this.classList.replace('bg-primary-subtle', 'bg-light'); this.classList.replace('border-primary', 'border-secondary');"
+               style="cursor: pointer;">
+            <i class="bi bi-file-earmark-arrow-up text-primary display-4 mb-3 d-block transition-hover"></i>
+            <div class="fw-semibold text-dark mb-1">Click to select file</div>
+            <div class="small text-muted">PDF, JPG, JPEG, PNG up to 10 MB</div>
+          </div>
+          <div class="d-none">{{ form.certificate }}</div>
+          {% if form.certificate.errors %}
+            <div class="text-danger small mt-1">{{ form.certificate.errors.0 }}</div>
+          {% endif %}
+        </div>
+
+        <div class="d-flex justify-content-end gap-2 pt-4 border-top">
+          <a href="{% url 'achievements' %}" class="btn btn-light border">Cancel</a>
+          <button type="submit" class="btn btn-primary shadow-sm px-4">Submit Achievement</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+.border-dashed { border-style: dashed !important; }
+</style>
+{% endblock %}

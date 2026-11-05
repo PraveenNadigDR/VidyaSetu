@@ -1,0 +1,28 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Profile | Vidya Setu{% endblock %}
+{% block page_title %}Student Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-md-8 mx-auto">
+    <div class="card bg-white border-0 shadow-sm text-center py-5">
+      <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow" style="width: 100px; height: 100px; font-size: 36px; font-weight: bold;">
+        {{ student.get_initials }}
+      </div>
+      <h3 class="fw-bold mb-1">{{ student.name }}</h3>
+      <p class="text-muted mb-4">{{ student.department }} &bull; Semester {{ student.semester }} &bull; {{ student.roll_no }}</p>
+      
+      <div class="d-flex justify-content-center gap-3">
+        <div class="badge status-VERIFIED p-2 px-3 border rounded-pill">
+          <i class="bi bi-star-fill text-warning me-1"></i> {{ badge_info.badge }}
+        </div>
+        <div class="badge bg-light text-dark p-2 px-3 border rounded-pill">
+          {{ badge_info.current_points }} Merit Points
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

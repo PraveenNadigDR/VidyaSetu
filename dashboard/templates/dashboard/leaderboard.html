@@ -1,0 +1,106 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Leaderboard | Vidya Setu{% endblock %}
+{% block page_title %}Merit Honor Roll{% endblock %}
+
+{% block content %}
+{% if current_student_rank %}
+<div class="position-relative overflow-hidden bg-primary bg-gradient text-white p-4 p-md-5 rounded-4 mb-4 d-flex justify-content-between align-items-center shadow" data-aos="fade-down">
+  <div class="position-absolute top-0 end-0 translate-middle-y" style="width: 250px; height: 250px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%); margin-top: -20px; margin-right: 50px;"></div>
+  
+  <div class="position-relative z-1">
+    <div class="text-uppercase fw-bold mb-1 text-primary-subtle" style="font-size: 0.75rem; letter-spacing: 0.05em;">
+      Your Current Standing
+    </div>
+    <h2 class="fw-bold mb-2 h3">Rank #{{ current_student_rank }} &mdash; {{ student.get_badge }}</h2>
+    <p class="mb-0 text-primary-subtle" style="font-size: 0.9rem;">You have earned <strong class="text-white">{{ student.get_merit_points }} verified points</strong> from {{ student.get_verified_achievements }} verified submissions.</p>
+  </div>
+  
+  <div class="position-relative z-1 d-none d-md-block">
+    <a href="{% url 'add_achievement' %}" class="btn btn-light rounded-pill px-4 fw-medium text-primary shadow-sm">
+      <i class="bi bi-plus-circle me-1"></i> Add Achievement
+    </a>
+  </div>
+</div>
+{% endif %}
+
+<div class="card shadow-sm border-0 mb-4 rounded-4" data-aos="fade-up" data-aos-delay="100">
+  <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+    <h3 class="h5 mb-1 fw-bold text-dark">Institutional Leaderboard</h3>
+    <p class="text-muted small mb-0">Ranked in descending order by authenticated merit points.</p>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="text-center text-muted small fw-bold text-uppercase border-bottom-0 py-3" style="width: 80px;">Rank</th>
+            <th class="text-muted small fw-bold text-uppercase border-bottom-0 py-3">Student Details</th>
+            <th class="text-muted small fw-bold text-uppercase border-bottom-0 py-3">Dept & Sem</th>
+            <th class="text-muted small fw-bold text-uppercase border-bottom-0 py-3">Verified</th>
+            <th class="text-muted small fw-bold text-uppercase border-bottom-0 py-3">Badge Honor</th>
+            <th class="text-end text-muted small fw-bold text-uppercase border-bottom-0 py-3 pe-4">Merit Points</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in leaderboard_data %}
+          <tr class="{% if entry.is_current_student %}bg-primary-subtle{% endif %}">
+            <td class="text-center fw-semibold py-3 border-light">
+              {% if entry.rank == 1 %}
+                <i class="bi bi-trophy-fill text-warning fs-5" title="Rank 1"></i>
+              {% elif entry.rank == 2 %}
+                <i class="bi bi-trophy-fill text-secondary fs-5" title="Rank 2"></i>
+              {% elif entry.rank == 3 %}
+                <i class="bi bi-trophy-fill text-danger fs-5" style="color: #cd7f32 !important;" title="Rank 3"></i>
+              {% else %}
+                <span class="text-muted">#{{ entry.rank }}</span>
+              {% endif %}
+            </td>
+            <td class="py-3 border-light">
+              <div class="d-flex align-items-center gap-3">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 40px; height: 40px; font-weight: 600; font-size: 0.9rem;">
+                  {{ entry.student.get_initials }}
+                </div>
+                <div>
+                  <div class="fw-semibold text-dark mb-0">
+                    {{ entry.name }}
+                    {% if entry.is_current_student %}
+                      <span class="badge bg-primary ms-2 rounded-pill fw-normal">You</span>
+                    {% endif %}
+                  </div>
+                  <div class="text-muted small">{{ entry.roll_no }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 border-light text-muted" style="font-size: 0.85rem;">
+              <div class="fw-medium text-dark">{{ entry.department }}</div>
+              Semester {{ entry.semester }}
+            </td>
+            <td class="py-3 border-light">
+              <span class="fw-semibold text-dark">{{ entry.verified_count }}</span>
+            </td>
+            <td class="py-3 border-light">
+              <span class="badge bg-light text-dark border border-secondary-subtle rounded-pill fw-medium px-3 py-2">
+                {{ entry.badge }}
+              </span>
+            </td>
+            <td class="text-end fw-bold text-primary py-3 pe-4 border-light" style="font-size: 0.95rem;">
+              {{ entry.points }} pts
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="6" class="text-center py-5 text-muted border-light">
+              <div class="d-flex flex-column align-items-center justify-content-center">
+                <i class="bi bi-bar-chart-line fs-2 mb-3 text-secondary opacity-50"></i>
+                <p class="mb-0">No leaderboard data available.</p>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
